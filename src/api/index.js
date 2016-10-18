@@ -3,7 +3,12 @@ import {Router} from 'express';
 import pg from 'pg';
 import facets from './facets';
 
+pg.defaults.ssl = true;
 const pgurl = `postgres://iskeizttxypnli:epJ6T3YOyI5dl2zNcjV0_hE8o7@ec2-54-247-118-36.eu-west-1.compute.amazonaws.com:5432/dafecv9fhlbk4p`;
+const client = new pg.Client(pgurl);
+client.connect();
+
+
 
 export default ({config, db}) => {
     let api = Router();
@@ -21,7 +26,10 @@ export default ({config, db}) => {
 
 
             client
-                .query('SELECT table_schema,table_name FROM information_schema.tables;', [], function (err, result) {
+                .query(`SELECT table_schema,table_name
+            FROM information_schema.tables
+            ORDER BY table_schema,table_name;
+            `, [], function (err, result) {
                     if (err) throw err;
 
                     // just print the result to the console
