@@ -5,8 +5,9 @@
   "main": "dist",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src\"",
-    "build": "babel-node src -s -D -d dist",
+    "build": "$(npm bin)/babel-node src -s -D -d dist",
     "start": "node dist",
+    "prestart": "npm run -s build",
     "test": "eslint src"
   },
   "eslintConfig": {
