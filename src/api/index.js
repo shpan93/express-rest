@@ -25,7 +25,7 @@ export default ({config, db}) => {
     }).get('/:id', (req, res) => {
         const id = req.params.id;
         client.query(`SELECT * FROM ${tableName} WHERE id = ${id}`, [], function (err, result) {
-            if (result.rows[0]) {
+            if (result && result.rows[0]) {
                 res.json(result.rows[0]);
             } else {
                 res.status(404).send(`No entry with id ${id}`);
