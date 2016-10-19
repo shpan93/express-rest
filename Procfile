@@ -1,1 +1,1 @@
-web: npm start
+web: $(npm bin)/babel-node dist
