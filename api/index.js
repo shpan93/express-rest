@@ -1,27 +1,22 @@
-import {version} from '../../package.json';
+import {version} from '../package.json';
 import {Router} from 'express';
-import pg from 'pg';
-import facets from './facets';
-
-pg.defaults.ssl = true;
-const pgurl = `postgres://iskeizttxypnli:epJ6T3YOyI5dl2zNcjV0_hE8o7@ec2-54-247-118-36.eu-west-1.compute.amazonaws.com:5432/dafecv9fhlbk4p`;
-const client = new pg.Client(pgurl);
-client.connect();
+import {comparePasswords, cryptPassword} from '../utils/password';
 
 const tableName = 'users';
 
-export default ({config, db}) => {
     let api = Router();
+export default (db) => {
+    const User = db.User;
 
-    // mount the facets resource
-    api.use('/facets', facets({config, db}));
-
-    // perhaps expose some API metadata at the root
     api.get('/', (req, res) => {
-        client.query(`SELECT * FROM ${tableName} ORDER  BY id ASC`, [], function (err, result) {
-            console.log();
-            res.json(result.rows);
-        });
+        User.findAll()
+          .then(function (users) {
+              res.json(users);
+          });
+        // client.query(`SELECT * FROM ${tableName} ORDER  BY id ASC`, [], function (err, result) {
+        //     console.log();
+        //     res.json(result.rows);
+        // });
     }).get('/:id', (req, res) => {
         const id = req.params.id;
         client.query(`SELECT * FROM ${tableName} WHERE id = ${id}`, [], function (err, result) {
@@ -33,12 +28,16 @@ export default ({config, db}) => {
 
         });
     }).post('/', (req, res) => {
-        const {name, age} = req.body;
-        client.query(`INSERT INTO ${tableName}(name,age) values($1, $2)`, [name, age], function (err, result) {
-            if (err) res.send(err);
-            res.send(result);
-
+        const {username, password} = req.body;
+        console.log([username, password]);
+        cryptPassword(password).then((hash) => {
+            console.log(hash);
+            User.create({ username, password: hash })
+              .then(function (user) {
+                  res.json(user);
+              });
         });
+
     }).put('/:id', (req, res) => {
         const id = req.params.id;
         client.query(`SELECT * FROM ${tableName} WHERE id = $1`, [id], function (err, result) {
@@ -61,8 +60,7 @@ export default ({config, db}) => {
             console.log(id);
             res.json(result);
         });
-    })
-    ;
-
+    });
     return api;
-}
+
+};

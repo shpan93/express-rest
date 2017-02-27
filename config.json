@@ -1,0 +1,12 @@
+{
+  "bodyLimit": "100kb",
+  "corsHeaders": [
+    "Link"
+  ],
+  "database": "dfnoekko1rtppq",
+  "user": "uoupwtabliabhv",
+  "port": 5432,
+  "password": "9bfc0f4d81fe4c08fbbf2bfb39a91223e5a6f0e0c4153fc410fa16b5aec4fa9a",
+  "host": "ec2-54-247-189-64.eu-west-1.compute.amazonaws.com",
+  "dbUrl": "postgres://uoupwtabliabhv:9bfc0f4d81fe4c08fbbf2bfb39a91223e5a6f0e0c4153fc410fa16b5aec4fa9a@ec2-54-247-189-64.eu-west-1.compute.amazonaws.com:5432/dfnoekko1rtppq"
+}
